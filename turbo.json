@@ -10,11 +10,15 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [
-        ".next/**",
-        "build/**",
-        "node_modules/.cache/metro/**"
-      ]
+      "outputs": [".next/**", "build/**", "node_modules/.cache/metro/**"]
+    },
+    "android": {
+      "cache": false,
+      "persistent": true
+    },
+    "ios": {
+      "cache": false,
+      "persistent": true
     },
     "dev": {
       "cache": false,
