@@ -1,0 +1,14 @@
+{
+  "name": "rn-mono",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "private": "true",
+  "workspaces": [
+    "packages/*"
+  ]
+}
