@@ -1,0 +1,44 @@
+{
+  "private": true,
+  "name": "@acme/monorepo",
+  "scripts": {
+    "dev": "turbo dev",
+    "dev:mobile": "turbo dev --filter=\"{./apps/mobile}...\"",
+    "dev:web": "turbo dev --filter=\"{./apps/web}...\"",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "build": "turbo build",
+    "build:mobile": "turbo build --filter=\"...{./apps/mobile}\"",
+    "build:web": "turbo build --filter=\"...{./apps/web}\"",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
+  },
+  "devDependencies": {
+    "turbo": "^1.10.7",
+    "typescript": "^4.9.5",
+    "@babel/core": "^7.20.0"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "@babel/*",
+        "expo-modules-*",
+        "typescript"
+      ]
+    }
+  },
+  "prettier": {
+    "printWidth": 100,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "version": "1.0.0",
+  "dependencies": {
+    "expo": "~49.0.18",
+    "expo-splash-screen": "~0.20.5",
+    "expo-status-bar": "~1.6.0",
+    "react": "18.2.0",
+    "react-native": "0.72.6"
+  }
+}
