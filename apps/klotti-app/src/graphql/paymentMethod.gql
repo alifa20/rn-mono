@@ -1,0 +1,4 @@
+fragment PaymentMethodFragment on User {
+  id
+  preferredPaymentType
+}

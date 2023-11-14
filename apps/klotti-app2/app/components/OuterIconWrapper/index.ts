@@ -1,0 +1,1 @@
+export { OuterIconWrapper } from './OuterIconWrapper';

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1094725578972",
+    "firebase_url": "https://klotti-app-dev-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "klotti-app-dev",
+    "storage_bucket": "klotti-app-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1094725578972:android:e0d62110be977083438419",
+        "android_client_info": {
+          "package_name": "com.klotti.development"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1094725578972-p1op0un8nhgfd8pgviojn500leco3trl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.klotti.development",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "1094725578972-r6aeugsvdr5o8735usnq9n8k9p9177r8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpZsU-39QrEbS3tI4KUDkJ9D0X9iblp6M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1094725578972-r6aeugsvdr5o8735usnq9n8k9p9177r8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1094725578972-dk07vrlf5bokgkt5qkecfc90oama6cek.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.klotti.development"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

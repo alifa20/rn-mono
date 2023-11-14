@@ -1,0 +1,84 @@
+{
+  "name": "@klotti/backend",
+  "version": "1.0.0",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "files": [
+    "dist/src"
+  ],
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "function-framework": "functions-framework --target=graphql --source=dist/src --trigger-http",
+    "start:dev": "dotenv -e .env.development concurrently \"tsc -w\" \"nodemon --watch ./dist/ --exec 'yarn generate && yarn function-framework' \" & dotenv -e .env.development npx prisma studio",
+    "start:local": "dotenv -e .env.local concurrently \"tsc -w\" \"nodemon --watch ./dist/ --exec 'yarn generate && yarn function-framework'\" & dotenv -e .env.local -- npx prisma studio",
+    "start:staging": "dotenv -e .env.staging concurrently \"tsc -w\" \"nodemon --watch ./dist/ --exec 'yarn generate && yarn function-framework'\" & dotenv -e .env.staging -- npx prisma studio",
+    "start:production": "dotenv -e .env.production concurrently \"tsc -w\" \"nodemon --watch ./dist/ --exec 'yarn generate && yarn function-framework'\" & dotenv -e .env.production -- npx prisma studio",
+    "reset:db:local": "dotenv -e .env.local npx prisma db push --force-reset && dotenv -e .env.local npx prisma db seed",
+    "start:prisma:local": "dotenv -e .env.local npx prisma studio",
+    "start:prisma:production": "dotenv -e .env.production npx prisma studio",
+    "prisma:local": "dotenv -e .env.local npx prisma",
+    "prisma:development": "dotenv -e .env.development npx prisma",
+    "prisma:staging": "dotenv -e .env.staging npx prisma",
+    "prisma:production": "dotenv -e .env.production npx prisma",
+    "deploy": "gcloud functions deploy graphql --runtime nodejs16 --project=klotti-app-dev --region=australia-southeast1 --trigger-http --allow-unauthenticated --set-env-vars NODE_ENV=development",
+    "generate": "graphql-codegen --config codegen.yml",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*\"",
+    "lint:fix": "eslint --fix \"src/**/*\"",
+    "deploy:db": "npx prisma db push",
+    "db:dev:list": "npx pscale branch list klotti-dev",
+    "db:dev:connect": "npx pscale connect klotti-dev",
+    "setup:db": "npx prisma db seed",
+    "types": "npx tsc"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "lint-staged": {
+    "src/**/*.ts": [
+      "yarn lint:fix"
+    ]
+  },
+  "dependencies": {
+    "@graphql-tools/graphql-file-loader": "^7.4.0",
+    "@graphql-tools/load": "^7.7.0",
+    "@graphql-tools/merge": "^8.2.3",
+    "@graphql-tools/schema": "^8.5.0",
+    "@prisma/client": "^4.13.0",
+    "apollo-server-cloud-functions": "^3.6.3",
+    "apollo-server-core": "^3.6.3",
+    "cors": "^2.8.5",
+    "cuid": "^2.1.8",
+    "express": "^4.17.3",
+    "firebase-admin": "^11.5.0",
+    "firebase-functions": "^4.4.1",
+    "graphql": "^16.8.0",
+    "is-base64": "^1.1.0",
+    "lodash": "^4.17.21",
+    "short-uuid": "^4.2.0",
+    "zod": "^3.22.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.20.0",
+    "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
+    "@faker-js/faker": "^8.0.2",
+    "@google-cloud/functions-framework": "^3.0.0",
+    "@graphql-codegen/cli": "^2.6.2",
+    "@graphql-codegen/typescript": "^2.4.7",
+    "@graphql-codegen/typescript-resolvers": "^2.5.4",
+    "@types/express": "^4.17.13",
+    "@types/is-base64": "^1.1.1",
+    "@types/lodash": "^4.14.191",
+    "@types/node": "^20.4.2",
+    "concurrently": "^7.6.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.1",
+    "prisma": "^4.13.0",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^5.1.3"
+  }
+}

@@ -1,0 +1,5 @@
+/dist
+
+apps/klotti-app2
+
+apps/*/expo-env.d.ts

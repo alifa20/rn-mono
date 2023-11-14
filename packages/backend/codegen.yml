@@ -1,0 +1,20 @@
+overwrite: true
+schema:
+  - './src/**/typeDefs.ts'
+generates:
+  ./src/__generated__/graphql.ts:
+    config:
+      useIndexSignature: true
+      defaultMapper: Partial<{T}>
+      enumValues:
+        CommonTypeType: ../types#CommonTypeType
+        Gender: ../types#Gender
+        SearchType: ../types#SearchType
+        Size: ../types#Size
+        LoginMethod: ../types#LoginMethod
+        AddressType: ../types#AddressType
+        PaymentType: ../types#PaymentType
+      contextType: ../index#Context
+    plugins:
+      - 'typescript'
+      - 'typescript-resolvers'

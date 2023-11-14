@@ -1,0 +1,1 @@
+export { EditAccountDetailScreen } from './Screen';

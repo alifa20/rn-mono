@@ -1,0 +1,9 @@
+node_modules
+dev.json
+prod.json
+dist/
+__generated__
+.env.development
+.env.local
+.env.staging
+.env.production

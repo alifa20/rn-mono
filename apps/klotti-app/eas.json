@@ -1,0 +1,51 @@
+{
+  "cli": {
+    "version": ">= 3.15.1"
+  },
+  "build": {
+    "base": {
+      "env": {
+        "KLOTTI_APP_API_KEY": "public",
+        "KLOTTI_APP_AUTH_DOMAIN": "public",
+        "KLOTTI_APP_PROJECT_ID": "public",
+        "KLOTTI_APP_STORAGE_BUCKET": "public",
+        "KLOTTI_APP_MESSAGING_SENDER_ID": "public",
+        "KLOTTI_APP_APP_ID": "public",
+        "KLOTTI_APP_MEASUREMENT_ID": "public",
+        "KLOTTI_APP_WEB_CLIENT_ID": "public",
+        "KLOTTI_APP_SENTRY_DSN": "public",
+        "KLOTTI_APP_APP_ENV": "public",
+        "GRAPHQL_API": "public"
+      }
+    },
+    "local": {
+      "extends": "base",
+      "channel": "local",
+      "developmentClient": true,
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "simulator": true
+      }
+    },
+    "development": {
+      "channel": "development",
+      "extends": "base"
+    },
+    "production": {
+      "channel": "production",
+      "extends": "base"
+    }
+  },
+  "submit": {
+    "development": {
+      "ios": {
+        "appleId": "senghuotaws@gmail.com",
+        "ascAppId": "1637218290"
+      }
+    },
+    "production": {}
+  }
+}

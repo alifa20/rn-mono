@@ -1,0 +1,41 @@
+query UserAddress {
+  user {
+    id
+    addresses {
+      ...UserAddressFragment
+    }
+  }
+}
+
+fragment UserAddressFragment on UserAddress {
+  id
+  firstName
+  lastName
+  addressLine1
+  addressLine2
+  city
+  state
+  zipCode
+  addressType
+  phoneNumber
+  preferred
+}
+
+mutation AddUserAddress($input: UserAddressInput!) {
+  addUserAddress(input: $input) {
+    id
+    ...UserAddressFragment
+  }
+}
+mutation UpdateUserAddress($addressId: String!, $input: UserAddressInput!) {
+  updateUserAddress(addressId: $addressId, input: $input) {
+    id
+    ...UserAddressFragment
+  }
+}
+mutation DeleteUserAddress($addressId: String!) {
+  deleteUserAddress(addressId: $addressId) {
+    id
+    message
+  }
+}

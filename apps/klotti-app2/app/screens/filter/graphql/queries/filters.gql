@@ -1,0 +1,11 @@
+query Filters($filters: ProductsInputFilter, $commonType: CommonTypeType!) {
+  filters(filters: $filters, commonType: $commonType) {
+    id
+    name
+    filterValues {
+      count
+      id
+      name
+    }
+  }
+}

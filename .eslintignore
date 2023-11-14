@@ -1,0 +1,7 @@
+dist/
+node_modules/
+__generated__
+ios/
+android/
+
+apps/klotti-app2

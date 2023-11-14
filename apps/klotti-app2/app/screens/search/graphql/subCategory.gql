@@ -1,0 +1,10 @@
+query SubCategory($subCategoryId: String!, $commonType: CommonTypeType!) {
+  subCategory(id: $subCategoryId, commonType: $commonType) {
+    id
+    name
+    productTypes {
+      id
+      name
+    }
+  }
+}

@@ -1,0 +1,65 @@
+query Wishlist {
+  user {
+    id
+    wishlist {
+      id
+      ...WishlistItemFragment
+    }
+  }
+}
+
+fragment WishlistItemFragment on WishlistItem {
+  id
+  updatedAt
+  createdAt
+  product {
+    id
+    title
+    description
+    imagesUrls
+    price
+    brand {
+      id
+      name
+    }
+    discount {
+      id
+      amount
+    }
+    subProducts {
+      id
+      size
+      quantity
+    }
+  }
+}
+
+mutation AddProductToUserWishlist($productId: String!) {
+  addProductToUserWishlist(productId: $productId) {
+    id
+    ...WishlistItemFragment
+  }
+}
+
+mutation AddWishlistedProductToUserCart(
+  $input: AddProductToUserCartInput!
+  $removeProductFromUserWishlistId: String!
+) {
+  addProductToUserCart(input: $input) {
+    id
+    # ...CartItemFragment
+  }
+  removeProductFromUserWishlist(productId: $removeProductFromUserWishlistId) {
+    id
+    message
+  }
+}
+
+mutation RemoveProductFromUserWishlist(
+  $removeProductFromUserWishlistId: String!
+) {
+  removeProductFromUserWishlist(productId: $removeProductFromUserWishlistId) {
+    id
+    message
+  }
+}

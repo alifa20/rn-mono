@@ -1,0 +1,55 @@
+{
+  "cli": {
+    "version": ">= 0.45.0"
+  },
+  "build": {
+    "base": {
+      "env": {
+        "API_KEY": "public",
+        "AUTH_DOMAIN": "public",
+        "PROJECT_ID": "public",
+        "STORAGE_BUCKET": "public",
+        "MESSAGING_SENDER_ID": "public",
+        "APP_ID": "public",
+        "MEASUREMENT_ID": "public",
+        "GRAPHQL_API": "public",
+        "WEB_CLIENT_ID": "public",
+        "SENTRY_DSN": "plubic",
+        "APP_ENV": "public"
+      }
+    },
+    "local": {
+      "extends": "base",
+      "channel": "local",
+      "developmentClient": true,
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "simulator": true
+      }
+    },
+    "development": {
+      "channel": "development",
+      "extends": "base"
+    },
+    "production": {
+      "channel": "production",
+      "extends": "base"
+    }
+  },
+  "submit": {
+    "development": {
+      "ios": {
+        "appleId": "senghuotaws@gmail.com",
+        "ascAppId": "1637218290"
+      },
+      "android": {
+        // "key": "private",
+        // "keystore": "private"
+      }
+    },
+    "production": {}
+  }
+}

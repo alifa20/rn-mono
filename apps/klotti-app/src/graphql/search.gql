@@ -1,0 +1,7 @@
+query Search($input: SearchInput!) {
+  search(input: $input) {
+    name
+    type
+    id
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "module": "esnext",
+    "strict": true,
+    "baseUrl": "./",
+    "paths": {
+      "@app/*": ["app/*"],
+      "@assets/*": ["assets/*"],
+      "@config/*": ["config/*"]
+    }
+  },
+  "exclude": ["node_modules"],
+  "tscFilesIncludes": ["app/@types", "app/types/app.d.ts"],
+  "include": ["app", "config/*"]
+}

@@ -1,0 +1,398 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex", "filteredRelationCount"]
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+// generator graphql {
+//   provider   = "graphql-schema-generator"
+//   createCRUD = "true"
+//   output     = "../src/__generated__/"
+//   customRules = "../prisma/rules.ts"
+// }
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum ShoppingPreference {
+  MENS
+  WOMENS
+  KIDS
+}
+
+enum AddressType {
+  PRIMARY
+  OTHER
+}
+
+model Address {
+  id           String      @id @default(cuid())
+  firstName    String
+  lastName     String
+  phoneNumber  String
+  addressLine1 String
+  addressLine2 String?
+  city         String
+  state        String?
+  zipCode      String
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  User         User        @relation(fields: [userId], references: [id])
+  userId       String
+  addressType  AddressType
+  preferred    Boolean     @default(false)
+  Order        Order[]
+
+  @@index([userId])
+  @@map("address")
+}
+
+enum PaymentType {
+  STRIPE
+  CASH_ON_DELIVERY
+}
+
+enum LoginMethod {
+  EMAIL
+  PHONE_NUMBER
+  FACEBOOK
+  GOOGLE
+  APPLE
+}
+
+model CredentialProvider {
+  id          String      @id @default(cuid())
+  User        User        @relation(fields: [userId], references: [id])
+  userId      String
+  loginMethod LoginMethod
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@unique([userId, loginMethod])
+  @@map("credential_providers")
+}
+
+model User {
+  id                 String              @id @default(cuid())
+  email              String?             @unique
+  username           String?
+  firstName          String?
+  lastName           String?
+  gender             Gender?
+  dateOfBirth        DateTime?
+  phoneNumber        String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  shoppingPreference ShoppingPreference?
+
+  userCartProducts     UserCartProduct[]
+  userWishlistProducts UserWishlistProduct[]
+  addresses            Address[]
+  orders               Order[]
+  preferredPaymentType PaymentType?
+  credentialProviders  CredentialProvider[]
+
+  @@map("users")
+}
+
+model UserWishlistProduct {
+  id        String   @id @default(cuid())
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  User      User     @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, productId])
+  @@index([userId, productId])
+  @@index([productId])
+  @@map("user_wishlist_products")
+}
+
+model UserCartProduct {
+  id        String   @id @default(cuid())
+  size      Size
+  quantity  Int
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User     @relation(fields: [userId], references: [id])
+  userId    String
+
+  @@unique([userId, productId, size])
+  @@index([userId, productId])
+  @@index([productId])
+  @@map("user_cart_products")
+}
+
+model Brand {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+
+  @@fulltext([name])
+  @@map("brands")
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products      Product[]
+  subCategories SubCategory[]
+  productTypes  ProductType[]
+
+  @@fulltext([name])
+  @@map("categories")
+}
+
+model SubCategory {
+  id         String   @id @default(cuid())
+  name       String   @unique
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId String
+
+  productTypes ProductType[]
+  products     Product[]
+
+  @@index([categoryId])
+  @@fulltext([name])
+  @@map("sub_categories")
+}
+
+model ProductType {
+  id         String   @id @default(cuid())
+  name       String   @unique
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId String
+
+  subCategories SubCategory[]
+  products      Product[]
+
+  @@index([categoryId])
+  @@fulltext([name])
+  @@map("product_types")
+}
+
+model Product {
+  id                  String       @id @default(cuid())
+  brand               Brand        @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  category            Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId          String
+  subCategory         SubCategory  @relation(fields: [subCategoryId], references: [id], onDelete: Cascade)
+  subCategoryId       String
+  productType         ProductType? @relation(fields: [productTypeId], references: [id], onDelete: Cascade)
+  productTypeId       String?
+  brandId             String
+  discountId          String?
+  discount            Discount?    @relation(fields: [discountId], references: [id])
+  washingInstructions String?
+
+  title       String
+  description String
+  price       Float
+  // Split this out into a separate table where you can have multiple rating with different users 
+  rating      Float?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  commonTypes CommonType[]
+
+  subProducts          SubProduct[]
+  tags                 Tag[]
+  tagId                String?
+  userCartProducts     UserCartProduct[]
+  userWishlistProducts UserWishlistProduct[]
+  productsInCollection ProductsInCollection[]
+  productsInOrder      ProductsInOrder[]
+  compositions         String?
+  care                 String?
+
+  @@index([categoryId, subCategoryId, brandId])
+  @@index([brandId])
+  @@index([subCategoryId])
+  @@index([productTypeId])
+  @@index([discountId])
+  @@fulltext([title])
+  @@fulltext([description])
+  @@fulltext([title, description])
+  @@map("products")
+}
+
+model Colour {
+  id         String       @id @default(cuid())
+  name       String       @unique
+  parentId   String?      @map("parent_id")
+  parent     Colour?      @relation("SubColour", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subColours Colour[]     @relation("SubColour")
+  subProduct SubProduct[]
+
+  @@index([id])
+  @@index([parentId])
+  @@fulltext([name])
+  @@map("colours")
+}
+
+enum CommonTypeType {
+  MENS
+  WOMENS
+  KIDS
+}
+
+model CommonType {
+  id        String         @id @default(cuid())
+  name      CommonTypeType @unique
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  products Product[]
+
+  @@map("common_types")
+}
+
+model Discount {
+  id        String   @id @default(cuid())
+  amount    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  start     DateTime
+  end       DateTime
+
+  products Product[]
+
+  @@map("discounts")
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+
+  @@fulltext([name])
+  @@map("tags")
+}
+
+enum Size {
+  S
+  M
+  L
+  XL
+  XXL
+  ONESIZE
+}
+
+model SubProduct {
+  id        String  @id @default(cuid())
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  size      Size
+  quantity  Int
+  colourId  String
+  colour    Colour  @relation(fields: [colourId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
+  @@index([colourId])
+  @@map("sub_products")
+}
+
+model Collection {
+  id                   String                 @id @default(cuid())
+  title                String
+  description          String
+  imageUrl             String
+  productsInCollection ProductsInCollection[]
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+
+  @@map("collections")
+}
+
+model ProductsInCollection {
+  id           String     @id @default(cuid())
+  product      Product    @relation(fields: [productId], references: [id])
+  productId    String
+  collection   Collection @relation(fields: [collectionId], references: [id])
+  collectionId String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([collectionId, productId])
+  @@index([collectionId, productId])
+  @@index([productId])
+  @@map("products_in_collections")
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  user      User        @relation(fields: [userId], references: [id])
+  userId    String
+  status    OrderStatus
+  promoCode String?
+  total     Float
+  discount  Float?
+
+  items       ProductsInOrder[]
+  Address     Address           @relation(fields: [addressId], references: [id])
+  addressId   String
+  paymentType PaymentType
+
+  @@index([userId])
+  @@index([addressId])
+  @@map("orders")
+}
+
+enum OrderStatus {
+  REVIEW // Currently, this case is when we ask our client whether this item is available or not
+  UNSUCCESSFUL
+  DELIVERING
+  DELIVERED
+}
+
+model ProductsInOrder {
+  id        String   @id @default(cuid())
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  quantity  Int
+  size      Size
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   String
+  price     Float
+  discount  Float?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([orderId, id])
+  @@unique([productId, orderId, size])
+  @@index([orderId, productId])
+  @@index([productId])
+  @@map("products_in_orders")
+}

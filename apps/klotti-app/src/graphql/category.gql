@@ -1,0 +1,14 @@
+query Category($categoryId: String!, $commonType: CommonTypeType!) {
+  category(id: $categoryId, commonType: $commonType) {
+    id
+    name
+    subCategories {
+      id
+      name
+      productTypes {
+        id
+        name
+      }
+    }
+  }
+}

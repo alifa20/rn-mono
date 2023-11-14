@@ -1,0 +1,152 @@
+name: EAS Build Development
+
+on:
+  push:
+    branches:
+      - 'dev'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compare_versions:
+    runs-on: ubuntu-latest
+    outputs:
+      should_build: ${{ steps.compare_versions_step.outputs.should_build }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3.5.2
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v2.5.2
+        with:
+          node-version: 18
+
+      - name: Compare versions
+        id: compare_versions_step
+        run: ./scripts/compare_versions.sh
+
+  build-app:
+    needs: [compare_versions]
+    runs-on: ubuntu-latest
+    if: needs.compare_versions.outputs.should_build == 'true'
+    steps:
+      - name: Check for EXPO_TOKEN
+        run: |
+          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+            echo "You must provide an EXPO_TOKEN secret linked to this project's Expo account in this repo's secrets. Learn more: https://docs.expo.dev/eas-update/github-actions"
+            exit 1
+          fi
+
+      - name: Check out repository code
+        uses: actions/checkout@v3.5.2
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v2.5.2
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Install Eas CLI
+        run: npm install -g eas-cli
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Prebuild
+        run: 'npx expo prebuild'
+
+      - name: Build and Deploy iOS
+        run: 'yarn deploy:ios:dev:store --non-interactive'
+
+  # - name: Build & Deploy Android
+  #   run: 'yarn deploy:ios:android:store --non-interactive'
+
+  update-app:
+    needs: [compare_versions]
+    runs-on: ubuntu-latest
+    environment: development
+    if: needs.compare_versions.outputs.should_build == 'false'
+    steps:
+      - name: Check for required secrets
+        run: |
+          missing_secrets=()
+          secrets_list=(
+            'EXPO_TOKEN:${{ secrets.EXPO_TOKEN }}'
+            'API_KEY:${{ secrets.API_KEY }}'
+            'AUTH_DOMAIN:${{ secrets.AUTH_DOMAIN }}'
+            'PROJECT_ID:${{ secrets.PROJECT_ID }}'
+            'STORAGE_BUCKET:${{ secrets.STORAGE_BUCKET }}'
+            'MESSAGING_SENDER_ID:${{ secrets.MESSAGING_SENDER_ID }}'
+            'APP_ID:${{ secrets.APP_ID }}'
+            'MEASUREMENT_ID:${{ secrets.MEASUREMENT_ID }}'
+            'GRAPHQL_API:${{ secrets.GRAPHQL_API }}'
+            'WEB_CLIENT_ID:${{ secrets.WEB_CLIENT_ID }}'
+            'SENTRY_DSN:${{ secrets.SENTRY_DSN }}'
+          )
+
+          for secret_entry in "${secrets_list[@]}"; do
+            IFS=':' read -ra secret_parts <<< "${secret_entry}"
+            key=${secret_parts[0]}
+            value=${secret_parts[1]}
+            [ -z "${value}" ] && missing_secrets+=("${key}")
+          done
+
+          if [ ${#missing_secrets[@]} -ne 0 ]; then
+            echo "The following secrets are missing:"
+            printf ' - %s\n' "${missing_secrets[@]}"
+            echo "Please add these secrets to your repository's settings. Learn more: https://docs.github.com/en/actions/reference/encrypted-secrets"
+            exit 1
+          fi
+
+      - name: Check out repository code
+        uses: actions/checkout@v3.5.2
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v2.5.2
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          expo-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Set OTA_VERSION
+        id: set_ota_version
+        run: echo "::set-output name=ota_version::$(git rev-parse --short HEAD)"
+
+      - name: Deploy OTA
+        uses: expo/expo-github-action/preview@v8
+        with:
+          command: 'eas update --channel development --message bump --non-interactive'
+        env:
+          APP_ENV: development
+          OTA_VERSION: ${{ steps.set_ota_version.outputs.ota_version }}
+          API_KEY: ${{ secrets.API_KEY }}
+          AUTH_DOMAIN: ${{ secrets.AUTH_DOMAIN }}
+          PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          STORAGE_BUCKET: ${{ secrets.STORAGE_BUCKET }}
+          MESSAGING_SENDER_ID: ${{ secrets.MESSAGING_SENDER_ID }}
+          APP_ID: ${{ secrets.APP_ID }}
+          MEASUREMENT_ID: ${{ secrets.MEASUREMENT_ID }}
+          GRAPHQL_API: ${{ secrets.GRAPHQL_API }}
+          WEB_CLIENT_ID: ${{ secrets.WEB_CLIENT_ID }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}

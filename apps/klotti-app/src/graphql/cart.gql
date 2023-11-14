@@ -1,0 +1,84 @@
+query Cart {
+  user {
+    id
+    ...CartFragment
+  }
+}
+
+fragment CartFragment on User {
+  id
+  cart {
+    shippingFee
+    subTotal
+    total
+    freeShippingThreshold
+    taxAmount
+    taxRate {
+      rate
+      rateLabel
+      ratePercentage
+    }
+    items {
+      ...CartItemFragment
+    }
+  }
+  ...PaymentMethodFragment
+}
+
+fragment CartItemFragment on CartItem {
+  id
+  updatedAt
+  createdAt
+  quantity
+  size
+  product {
+    id
+    title
+    description
+    imagesUrls
+    price
+    brand {
+      id
+      name
+    }
+    discount {
+      id
+      amount
+    }
+    subProducts {
+      id
+      size
+      quantity
+    }
+  }
+}
+
+mutation AddProductToUserCart($input: AddProductToUserCartInput!) {
+  addProductToUserCart(input: $input) {
+    id
+    # ...CartFragment
+  }
+}
+
+mutation RemoveProductFromUserCart($cartId: String!) {
+  removeProductFromUserCart(id: $cartId) {
+    id
+  }
+}
+
+mutation UpdateUserCartProduct($input: UpdateUserCartProductInput!) {
+  updateUserCartProduct(input: $input) {
+    id
+    # ...CartFragment
+  }
+}
+
+mutation MoveToWishlist($productId: String!, $cartId: String!) {
+  addProductToUserWishlist(productId: $productId) {
+    id
+    # ...WishlistFragment
+  }
+  removeProductFromUserCart(id: $cartId) {
+    id
+  }
+}

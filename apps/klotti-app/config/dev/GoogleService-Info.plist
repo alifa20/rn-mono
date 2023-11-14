@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1094725578972-dk07vrlf5bokgkt5qkecfc90oama6cek.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1094725578972-dk07vrlf5bokgkt5qkecfc90oama6cek</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDGW44cb-kEaND0_mURB0yvx6LdtZpGe1o</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1094725578972</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.klotti.development</string>
+	<key>PROJECT_ID</key>
+	<string>klotti-app-dev</string>
+	<key>STORAGE_BUCKET</key>
+	<string>klotti-app-dev.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1094725578972:ios:16d852ac21367ba5438419</string>
+	<key>DATABASE_URL</key>
+	<string>https://klotti-app-dev-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+</dict>
+</plist>

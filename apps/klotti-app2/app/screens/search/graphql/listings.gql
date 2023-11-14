@@ -1,0 +1,29 @@
+query SearchListings(
+  $commonType: CommonTypeType!
+  $filters: ProductsInputFilter
+  $initialFilters: ProductsInputFilter
+  $sortBy: SortBy
+  $pagination: Pagination
+) {
+  products(
+    commonType: $commonType
+    filters: $filters
+    initialFilters: $initialFilters
+    sortBy: $sortBy
+    pagination: $pagination
+  ) {
+    id
+    title
+    description
+    imagesUrls
+    price
+    brand {
+      id
+      name
+    }
+    discount {
+      id
+      amount
+    }
+  }
+}

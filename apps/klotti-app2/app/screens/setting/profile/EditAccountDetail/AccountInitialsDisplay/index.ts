@@ -1,0 +1,1 @@
+export { AccountInitialsDisplay } from './AccountInitialsDisplay';

@@ -1,0 +1,11 @@
+mutation CreateUser($input: CreateUserInput!) {
+  createUser(input: $input) {
+    id
+  }
+}
+
+mutation SSOSignOn($input: SSOSignOnInput!) {
+  ssoSignOn(input: $input) {
+    id
+  }
+}

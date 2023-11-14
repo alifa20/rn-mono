@@ -1,0 +1,46 @@
+query Product($productId: String!) {
+  product(id: $productId) {
+    id
+    ...ProductDetail
+  }
+}
+
+fragment ProductDetail on Product {
+  id
+  subProducts {
+    size
+    quantity
+    id
+    colour {
+      id
+      name
+    }
+  }
+  title
+  description
+  imagesUrls
+  rating
+  price
+  brand {
+    id
+    name
+  }
+  discount {
+    id
+    amount
+  }
+  category {
+    id
+    name
+  }
+  subCategory {
+    id
+    name
+  }
+  productType {
+    id
+    name
+  }
+  compositions
+  washingInstructions
+}

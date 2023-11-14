@@ -1,0 +1,11 @@
+# query Collections {
+#   collections {
+#     id
+#     title
+#     description
+#     imageUrl
+#     products {
+#       ...ProductDisplay
+#     }
+#   }
+# }

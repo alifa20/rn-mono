@@ -1,0 +1,54 @@
+{
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "packages/config/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "clean": "turbo clean && rm -rf node_modules",
+    "format": "prettier --write \"**/*.{ts,tsx}\" --ignore-path .gitignore",
+    "ios": "turbo ios",
+    "app:klotti": "yarn workspace @klotti/klotti",
+    "package:backend": "yarn workspace @klotti/backend",
+    "lint": "eslint . --ext .ts,.tsx",
+    "storybook-generate": "turbo storybook-generate",
+    "gql:generate:development": "turbo gql:generate:development",
+    "postinstall": "husky install",
+    "test": "turbo test"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx,js,jsx}": [
+      "eslint . --fix",
+      "prettier --write"
+    ]
+  },
+  "postinstall": "turbo build",
+  "devDependencies": {
+    "@react-native-community/eslint-config": "^3.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.4.1",
+    "@typescript-eslint/parser": "^6.4.1",
+    "dotenv-cli": "^7.2.1",
+    "eslint": "^8.48.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-import-resolver-typescript": "^3.6.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-jest": "^27.2.3",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-native": "^4.0.0",
+    "eslint-plugin-unused-imports": "^3.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1",
+    "prettier": "^3.0.2",
+    "turbo": "latest",
+    "typescript": "^5.1.3"
+  },
+  "packageManager": "yarn@3.6.1",
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  }
+}
