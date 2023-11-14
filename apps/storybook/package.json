@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "expo": "~49.0.15",
+    "ui-kit": "*",
     "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
     "react": "18.2.0",
